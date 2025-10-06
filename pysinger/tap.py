@@ -40,6 +40,7 @@ class Tap:
         self.catalog_path = catalog_path or f"{self.wdir.name}/tap_catalog.json"
         self.use_config_path = True if config_path else False
         self.use_state_path = True if state_path else False
+        self.use_catalog_path = True if catalog_path else False
         self._initialized = False
 
     def initialize(self) -> None:
