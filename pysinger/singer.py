@@ -13,6 +13,7 @@ class Singer:
         target: Union[str, Target],
         tap_config: Optional[Dict[str, Any]] = None,
         tap_state: Optional[Dict[str, Any]] = None,
+        tap_catalog: Optional[Dict[str, Any]] = None,
         target_config: Optional[Dict[str, Any]] = None,
         tap_kwargs: Dict[str, Any] = {},
         target_kwargs: Dict[str, Any] = {},
@@ -20,7 +21,7 @@ class Singer:
         if isinstance(tap, Tap):
             self.tap = tap
         else:
-            self.tap = Tap(tap, config=tap_config, state=tap_state, **tap_kwargs)
+            self.tap = Tap(tap, config=tap_config, state=tap_state, catalog=tap_catalog, **tap_kwargs)
 
         if isinstance(target, Target):
             self.target = target
