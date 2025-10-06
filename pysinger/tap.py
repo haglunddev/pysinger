@@ -21,19 +21,23 @@ class Tap:
         tap_exec: Optional[str] = None,
         config: Optional[Dict[str, Any]] = None,
         state: Optional[Dict[str, Any]] = None,
+        catalog: Optional[Dict[str, Any]] = None,
         config_path: Optional[str] = None,
         state_path: Optional[str] = None,
+        catalog_path: Optional[str] = None,
     ) -> None:
         self.tap_name = tap
         self.tap_exec = tap_exec or tap
         self.config = config
         self.state = state
+        self.catalog = catalog
         self.wdir = TemporaryDirectory()
         self.venv_path = f"{self.wdir.name}/{self.tap_name}"
         self.pip_path = f"{self.venv_path}/bin/pip"
         self.exec_path = f"{self.venv_path}/bin/"
         self.config_path = config_path or f"{self.wdir.name}/tap_config.json"
         self.state_path = state_path or f"{self.wdir.name}/tap_state.json"
+        self.catalog_path = catalog_path or f"{self.wdir.name}/tap_catalog.json"
         self.use_config_path = True if config_path else False
         self.use_state_path = True if state_path else False
         self._initialized = False
@@ -73,6 +77,10 @@ class Tap:
         if self.state:
             with open(self.state_path, "w") as f:
                 f.write(json.dumps(self.state))
+        
+        if self.catalog:
+            with open(self.catalog_path, "w") as f:
+                f.write(json.dumps(self.catalog))
 
     @property
     def run_cmd(self) -> str:
@@ -82,4 +90,8 @@ class Tap:
 
         if self.state or self.use_state_path:
             cmd += f"--state {self.state_path} "
+
+        if self.catalog or self.use_catalog_path:
+            cmd += f"--catalog {self.catalog_path}"
+
         return cmd
